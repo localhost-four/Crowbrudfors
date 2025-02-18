@@ -70,27 +70,21 @@ def crawl_and_download(base_url, current_url, local_dir):
                 a_tag = cols[1].find('a')
                 if a_tag and 'href' in a_tag.attrs:
                     href = a_tag['href'].strip()
-                    if not href:  # Пропускаем пустые ссылки
-                        continue
-
-                    full_url = urljoin(current_url, href)
-
-                    # Пропускаем ссылки, которые выходят за пределы базового URL
-                    if not full_url.startswith(base_url):
-                        continue
-
-                    relative_path = full_url.replace(base_url, "")
-                    local_file_path = os.path.join(local_dir, relative_path)
-
-                    if is_file_link(full_url):
-                        # Это файл - скачиваем его
-                        create_directory(os.path.dirname(local_file_path))
-                        download_file(full_url, local_file_path)
-                        links.append(full_url)
-                    elif href.endswith('/'):  # Это папка
-                        # Рекурсивно обходим папку
-                        sub_links = crawl_and_download(base_url, full_url, local_dir)
-                        links.extend(sub_links)  # Добавляем найденные ссылки из подпапки
+                    if href:  # Пропускаем пустые ссылки
+                        full_url = urljoin(current_url, href)
+                        if full_url.startswith(base_url):
+                            relative_path = full_url.replace(base_url, "")
+                            local_file_path = os.path.join(local_dir, relative_path)
+        
+                            if is_file_link(full_url):
+                                # Это файл - скачиваем его
+                                create_directory(os.path.dirname(local_file_path))
+                                download_file(full_url, local_file_path)
+                                links.append(full_url)
+                            elif href.endswith('/'):  # Это папка
+                                # Рекурсивно обходим папку
+                                sub_links = crawl_and_download(base_url, full_url, local_dir)
+                                links.extend(sub_links)  # Добавляем найденные ссылки из подпапки
 
     print(links)
     return links
