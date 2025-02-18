@@ -6,7 +6,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 # Настройки
-BASE_URL = "https://cdn.changes.tg/gifts/"
+BASE_URL = "https://*/gifts/"
 LOCAL_UPLOAD_DIR = "upload"
 SITEMAP_FILE = "sitemap.xml"
 
@@ -42,7 +42,7 @@ def crawl_and_download(base_url, current_url, local_dir):
     soup = BeautifulSoup(response.text, 'html.parser')
     links = []
     
-    """
+    
     for a_tag in soup.find_all('a', href=True):
         href = a_tag['href']
         full_url = urljoin(current_url, href)
@@ -59,7 +59,7 @@ def crawl_and_download(base_url, current_url, local_dir):
             elif href.endswith('/'):  # Это папка
                 # Рекурсивно обходим папку
                 crawl_and_download(base_url, full_url, local_dir)
-    """
+    
     # Парсим таблицу с файлами и папками
     table = soup.find('table')
     if table:
